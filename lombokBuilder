@@ -1,0 +1,39 @@
+public java.lang.String toString(){String s="";String p="";
+#foreach( $member in $members )
+    #if ($member.primitive )
+        #if ($member.boolean)
+        if ($member.accessor)s += "\n." + "$member.name" + "(" + $member.accessor + ")";
+        #else
+        if ( $member.accessor != 0 )s += "\n." + "$member.name" + "(" + $member.accessor + ")";
+        #end
+    #end
+    #if ( $member.primitiveArray)
+    if ($member.name != null && $member.name .length > 0) {String s1 = "\n." + "$member.name" + "(new "+ "$member.typeQualifiedName" + "[]{" ;for (Object object : $member.name)s1 += object.toString() + ",";s += s1.substring(0, s1.length() - 1) + "})";}
+    #end
+    #if ($member.object)
+    if ( $member.accessor != null )
+        #if ( $member.objectArray)
+        if ($member.name != null && $member.name .length > 0) {String s1 = "\n." + "$member.name" + "(Arrays.array(";for (Object object : $member.name)s1 += object.toString() + ",";s += s1.substring(0, s1.length() - 1) + "))";}
+
+        #elseif ( $member.string )
+        s += "\n." + "$member.name" + "(\"" + $member.accessor + "\")";
+        #elseif( $member.typeQualifiedName ==
+            'java.sql.Date' )
+        s += "\n." + "$member.name" + "(java.sql.Date.valueOf(\""+ $member.accessor . toLocalDate() + "\"))";
+        #elseif( $member.list)
+        {p += "\nList _list = List.of();";for (Object o : $member.name)p += o instanceof String ? "\n_list.add(\"" + o + "\");" : "\n_list.add(" + o + ");";s = "\n." + "$member.name" + "(_list)";}
+        #elseif( $member.set)
+        {p += "\nSet _set = Set.of();";for (Object o : $member.name)p += "\n_set.add(" + o + ");";s = "\n." + "setProp" + "(_set)";}
+        #elseif( $member.map)
+        {p+= "\nMap _map = Map.of();";for (Map.Entry e : $member.name .entrySet()){String key = e.getKey() instanceof String ? "\"" + e.getKey() + "\"" : e.getKey().toString();String value = e.getValue() instanceof String ? "\"" + e.getValue() + "\"" : e.getValue().toString();p+= "\n_map.put("+key+","+value+");";}s = "\n." + "$member.name" + "(_map)";}
+        #elseif( $member.collection)
+{        p += "\n$member.typeName _list = new $member.typeName ();";
+        for (Object o : $member.name)
+        p += o instanceof String ? "\n_list.add(\"" + o + "\");" : "\n_list.add(" + o + ");";
+        s = "\n." + "$member.name" + "(_list)";}
+        #else
+        s += "\n." + "$member.name" + "(" + $member.accessor + ")";
+        #end
+    #end
+#end
+return p + "\n$classname" + ".builder()" + s + ".build()";}

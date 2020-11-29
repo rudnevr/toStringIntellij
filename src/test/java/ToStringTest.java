@@ -104,82 +104,7 @@ public class ToStringTest {
                 ".build()");
     }
 
-    @Builder
-    static class Clazz {
-        public int intProp;
-        public Set<Integer> setProp;
-        public List<String> listProp;
-        String stringProp;
-        Integer integerProp;
-        Double doubleProp;
-        Boolean booleanProp;
-        Integer[] integerArrProp;
-        int[] intArrProp;
-        boolean boolProp;
-        Map<Integer, String> mapProp;
-        CustomCollection collection;
 
-        @Override
-        public String toString() {
-            String s = "";
-            String p = "";
-            if (intProp != 0)
-                s += "\n." + "intProp" + "(" + intProp + ")";
-            if (setProp != null) {
-                p += "\nSet _set = Set.of();";
-                for (Object o : setProp)
-                    p += "\n_set.add(" + o + ");";
-                s = "\n." + "setProp" + "(_set)";
-            }
-            if (listProp != null) {
-                p += "\nList _list = List.of();";
-                for (Object o : listProp)
-                    p += o instanceof String ? "\n_list.add(\"" + o + "\");" : "\n_list.add(" + o + ");";
-                s = "\n." + "listProp" + "(_list)";
-            }
-            if (stringProp != null)
-                s += "\n." + "stringProp" + "(\"" + stringProp + "\")";
-            if (integerProp != null)
-                s += "\n." + "integerProp" + "(" + integerProp + ")";
-            if (doubleProp != null)
-                s += "\n." + "doubleProp" + "(" + doubleProp + ")";
-            if (booleanProp != null)
-                s += "\n." + "booleanProp" + "(" + booleanProp + ")";
-            if (integerArrProp != null)
-                if (integerArrProp != null && integerArrProp.length > 0) {
-                    String s1 = "\n." + "integerArrProp" + "(Arrays.array(";
-                    for (Object object : integerArrProp)
-                        s1 += object.toString() + ",";
-                    s += s1.substring(0, s1.length() - 1) + "))";
-                }
-
-            if (intArrProp != null && intArrProp.length > 0) {
-                String s1 = "\n." + "intArrProp" + "(new " + "int" + "[]{";
-                for (Object object : intArrProp)
-                    s1 += object.toString() + ",";
-                s += s1.substring(0, s1.length() - 1) + "})";
-            }
-            if (boolProp)
-                s += "\n." + "boolProp" + "(" + boolProp + ")";
-            if (mapProp != null) {
-                p += "\nMap _map = Map.of();";
-                for (Map.Entry e : mapProp.entrySet()) {
-                    String key = e.getKey() instanceof String ? "\"" + e.getKey() + "\"" : e.getKey().toString();
-                    String value = e.getValue() instanceof String ? "\"" + e.getValue() + "\"" : e.getValue().toString();
-                    p += "\n_map.put(" + key + "," + value + ");";
-                }
-                s = "\n." + "mapProp" + "(_map)";
-            }
-            if (collection != null) {
-                p += "\nCustomCollection _list = new CustomCollection ();";
-                for (Object o : collection)
-                    p += o instanceof String ? "\n_list.add(\"" + o + "\");" : "\n_list.add(" + o + ");";
-                s = "\n." + "collection" + "(_list)";
-            }
-            return p + "\nClazz" + ".builder()" + s + ".build()";
-        }
-
-    }
 
     @Test
     void name() {
@@ -201,78 +126,12 @@ public class ToStringTest {
                 .intArrProp(new int[]{123}).build();
     }
 
-    public String method(int i, String s, int[] arr) {
+    public String method(int i, String s, int[] arr, List<String> l, List<List<String>> ll) {
+
         return null;
     }
 
-    static class CustomCollection implements Collection {
-        List list = new ArrayList();
 
-        @Override
-        public int size() {
-            return list.size();
-        }
-
-        @Override
-        public boolean isEmpty() {
-            return list.isEmpty();
-        }
-
-        @Override
-        public boolean contains(Object o) {
-            return list.contains(o);
-        }
-
-        @Override
-        public Iterator iterator() {
-            return list.iterator();
-        }
-
-        @Override
-        public Object[] toArray() {
-            return list.toArray();
-        }
-
-        @Override
-        public boolean add(Object o) {
-            return list.add(o);
-        }
-
-        @Override
-        public boolean remove(Object o) {
-            return list.remove(o);
-        }
-
-        @Override
-        public boolean addAll(Collection c) {
-            return list.addAll(c);
-        }
-
-        @Override
-        public void clear() {
-            list.clear();
-        }
-
-        @Override
-        public boolean retainAll(Collection c) {
-            return list.retainAll(c);
-        }
-
-        @Override
-        public boolean removeAll(Collection c) {
-            return list.removeAll(c);
-        }
-
-        @Override
-        public boolean containsAll(Collection c) {
-            return list.containsAll(c);
-        }
-
-        @Override
-        public Object[] toArray(Object[] a) {
-            return list.toArray(a);
-        }
-    }
 
 
 }

@@ -1,4 +1,3 @@
-import lombok.Builder;
 import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.Test;
 
@@ -7,17 +6,18 @@ import java.util.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ToStringTest {
+
     @Test
     void whenClassToStringCalled_shouldPrintBuilder() {
         Clazz clazz = Clazz.builder().build();
-        assertThat(clazz.toString()).isEqualTo("\nClazz.builder().build()");
+        assertThat(clazz.toString()).isEqualTo("\nClazz clazz = Clazz.builder().build()");
     }
 
     @Test
     void whenClassWithStringProp_shouldPrintBuilder() {
         Clazz clazz = Clazz.builder().build();
         clazz.stringProp = "stringPropValue";
-        assertThat(clazz.toString()).isEqualTo("\nClazz.builder()" +
+        assertThat(clazz.toString()).isEqualTo("\nClazz clazz = Clazz.builder()" +
                 "\n.stringProp(\"stringPropValue\")" +
                 ".build()");
     }
@@ -26,7 +26,7 @@ public class ToStringTest {
     void whenClassWithIntegerProp_shouldPrintBuilder() {
         Clazz clazz = Clazz.builder().build();
         clazz.integerProp = 123;
-        assertThat(clazz.toString()).isEqualTo("\nClazz.builder()" +
+        assertThat(clazz.toString()).isEqualTo("\nClazz clazz = Clazz.builder()" +
                 "\n.integerProp(123)" +
                 ".build()");
     }
@@ -35,7 +35,7 @@ public class ToStringTest {
     void whenClassWithIntProp_shouldPrintBuilder() {
         Clazz clazz = Clazz.builder().build();
         clazz.intProp = 123;
-        assertThat(clazz.toString()).isEqualTo("\nClazz.builder()" +
+        assertThat(clazz.toString()).isEqualTo("\nClazz clazz = Clazz.builder()" +
                 "\n.intProp(123)" +
                 ".build()");
     }
@@ -44,7 +44,7 @@ public class ToStringTest {
     void whenClassWithIntegerArr_shouldPrintBuilder() {
         Clazz clazz = Clazz.builder().build();
         clazz.integerArrProp = Arrays.array(123);
-        assertThat(clazz.toString()).isEqualTo("\nClazz.builder()" +
+        assertThat(clazz.toString()).isEqualTo("\nClazz clazz = Clazz.builder()" +
                 "\n.integerArrProp(Arrays.array(123))" +
                 ".build()");
     }
@@ -56,7 +56,7 @@ public class ToStringTest {
 
         assertThat(clazz.toString()).isEqualTo("\nSet _set = Set.of();" +
                 "\n_set.add(123);" +
-                "\nClazz.builder()" +
+                "\nClazz clazz = Clazz.builder()" +
                 "\n.setProp(_set)" +
                 ".build()");
     }
@@ -67,7 +67,7 @@ public class ToStringTest {
         clazz.mapProp = Map.of(123, "ab");
         assertThat(clazz.toString()).isEqualTo("\nMap _map = Map.of();" +
                 "\n_map.put(123,\"ab\");" +
-                "\nClazz.builder()" +
+                "\nClazz clazz = Clazz.builder()" +
                 "\n.mapProp(_map)" +
                 ".build()");
     }
@@ -78,7 +78,7 @@ public class ToStringTest {
         clazz.listProp = List.of("ab");
         assertThat(clazz.toString()).isEqualTo("\nList _list = List.of();" +
                 "\n_list.add(\"ab\");" +
-                "\nClazz.builder()" +
+                "\nClazz clazz = Clazz.builder()" +
                 "\n.listProp(_list)" +
                 ".build()");
     }
@@ -90,7 +90,7 @@ public class ToStringTest {
         clazz.collection.add("ab");
         assertThat(clazz.toString()).isEqualTo("\nCustomCollection _list = new CustomCollection ();" +
                 "\n_list.add(\"ab\");" +
-                "\nClazz.builder()" +
+                "\nClazz clazz = Clazz.builder()" +
                 "\n.collection(_list)" +
                 ".build()");
     }
@@ -99,39 +99,38 @@ public class ToStringTest {
     void whenClassWithIntArr_shouldPrintBuilder() {
         Clazz clazz = Clazz.builder().build();
         clazz.intArrProp = new int[]{123};
-        assertThat(clazz.toString()).isEqualTo("\nClazz.builder()" +
+        assertThat(clazz.toString()).isEqualTo("\nClazz clazz = Clazz.builder()" +
                 "\n.intArrProp(new int[]{123})" +
                 ".build()");
     }
 
+    @Test
+    void whenClassWithAllProps_shouldPrintBuilder() {
+        Clazz clazz = ClazzFactory.buildClazzWithAllProps();
+        assertThat(clazz.toString()).isEqualTo("\n" +
+                "List _list = List.of();\n" +
+                "_list.add(\"aa\");\n" +
+                "_list.add(\"bb\");\n" +
+                "Map _map = Map.of();\n" +
+                "_map.put(123,\"ab\");\n" +
+                "Set _set = Set.of();\n" +
+                "_set.add(123);\n" +
+                "Clazz clazz = Clazz.builder()\n" +
+                ".booleanProp(true)\n" +
+                ".doubleProp(1.1)\n" +
+                ".intArrProp(new int[]{123})\n" +
+                ".integerArrProp(Arrays.array(111))\n" +
+                ".integerProp(123)\n" +
+                ".intProp(123)\n" +
+                ".listProp(_list)\n" +
+                ".mapProp(_map)\n" +
+                ".setProp(_set)\n" +
+                ".stringProp(\"aa\").build()");
+    }
 
 
     @Test
     void name() {
-        System.out.println("buildClazz() = " + buildClazz().toString());
+        System.out.println("buildClazz() = " + ClazzFactory.buildClazzWithAllProps().toString());
     }
-
-    Clazz buildClazz() {
-        Set<Integer> source = Set.of(123);
-        Map<Integer, String> sourceMap = Map.of(123, "ab");
-        return Clazz.builder()
-                .mapProp(sourceMap)
-                .setProp(source)
-                .boolProp(false)
-                .booleanProp(true)
-                .doubleProp(1.1)
-                .stringProp("aa")
-                .integerProp(123)
-                .integerArrProp(Arrays.array(111))
-                .intArrProp(new int[]{123}).build();
-    }
-
-    public String method(int i, String s, int[] arr, List<String> l, List<List<String>> ll) {
-
-        return null;
-    }
-
-
-
-
 }

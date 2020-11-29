@@ -1,3 +1,6 @@
+#set( $regex = "([a-z])([A-Z]+)")
+#set( $replacement = "$1-$2")
+#set( $toDash = $NAME.replaceAll($regex, $replacement).toLowerCase())
 public java.lang.String toString(){String s="";String p="";
 #foreach( $member in $members )
     #if ($member.primitive )
@@ -21,19 +24,19 @@ public java.lang.String toString(){String s="";String p="";
             'java.sql.Date' )
         s += "\n." + "$member.name" + "(java.sql.Date.valueOf(\""+ $member.accessor . toLocalDate() + "\"))";
         #elseif( $member.list)
-        {p += "\nList _list = List.of();";for (Object o : $member.name)p += o instanceof String ? "\n_list.add(\"" + o + "\");" : "\n_list.add(" + o + ");";s = "\n." + "$member.name" + "(_list)";}
+        {p += "\nList _list = List.of();";for (Object o : $member.name)p += o instanceof String ? "\n_list.add(\"" + o + "\");" : "\n_list.add(" + o + ");";s += "\n." + "$member.name" + "(_list)";}
         #elseif( $member.set)
-        {p += "\nSet _set = Set.of();";for (Object o : $member.name)p += "\n_set.add(" + o + ");";s = "\n." + "setProp" + "(_set)";}
+        {p += "\nSet _set = Set.of();";for (Object o : $member.name)p += "\n_set.add(" + o + ");";s += "\n." + "setProp" + "(_set)";}
         #elseif( $member.map)
-        {p+= "\nMap _map = Map.of();";for (Map.Entry e : $member.name .entrySet()){String key = e.getKey() instanceof String ? "\"" + e.getKey() + "\"" : e.getKey().toString();String value = e.getValue() instanceof String ? "\"" + e.getValue() + "\"" : e.getValue().toString();p+= "\n_map.put("+key+","+value+");";}s = "\n." + "$member.name" + "(_map)";}
+        {p+= "\nMap _map = Map.of();";for (Map.Entry e : $member.name .entrySet()){String key = e.getKey() instanceof String ? "\"" + e.getKey() + "\"" : e.getKey().toString();String value = e.getValue() instanceof String ? "\"" + e.getValue() + "\"" : e.getValue().toString();p+= "\n_map.put("+key+","+value+");";}s += "\n." + "$member.name" + "(_map)";}
         #elseif( $member.collection)
 {        p += "\n$member.typeName _list = new $member.typeName ();";
         for (Object o : $member.name)
         p += o instanceof String ? "\n_list.add(\"" + o + "\");" : "\n_list.add(" + o + ");";
-        s = "\n." + "$member.name" + "(_list)";}
+        s += "\n." + "$member.name" + "(_list)";}
         #else
         s += "\n." + "$member.name" + "(" + $member.accessor + ")";
         #end
     #end
 #end
-return p + "\n$classname" + ".builder()" + s + ".build()";}
+return p + "\n$classname $classname.replaceAll($regex, $replacement).toLowerCase() = $classname" + ".builder()" + s + ".build()";}

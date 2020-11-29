@@ -18,4 +18,4 @@ class PsiParameter_ {
     public String toString() {
         return type + ':' + name;
     };
-}
+};

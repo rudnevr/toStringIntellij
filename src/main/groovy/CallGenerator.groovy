@@ -1,20 +1,22 @@
 class CallGenerator {
 
-    String generateCallFromParams(String methodName, PsiParameter_[] parameters) {
+    String generateCallFromParams(String methodName, PsiParameter_[] parameters, String returnType, String className) {
 
        String params = parameters.collect {
             if (it.type == 'int[]')
                 return '\"' + it.type + '\"' + it.name + '= new ' + it.type + '{ \" + java.util.Arrays.toString(' + it.name + ').replaceAll(\"^.&.$\",\"\") + \"};\"';
             if (it.type == 'int')
-                return '\"' + it.type + ' ' + it.name + '= \"+' + it.name;
+                return it.type + ' ' + it.name + ' = \" + ' + it.name + ' + \";\" + \"';
             if (it.type == 'String')
                 return '\"' + it.type + ' ' + it.name + '= \\\\\"\"+' + it.name + '+\"\\\\\"\"';
-        }.join('+\"; \"+');
+            else
+                return it.type + ' ' + it.name + ' = \" + ' + it.name + '.toString()' + ' + \";\" + \"';
+        }.join('');
 
-        String res = methodName + '(' + parameters.collect {
+        String methodCall = methodName + '(' + parameters.collect {
             return it.name;
         }.join(', ');
 
-        return res + ');';
+        return '\"' + params + returnType + ' actual=new ' + className + '().' + methodCall + ');\"';
     }
-}
+};
